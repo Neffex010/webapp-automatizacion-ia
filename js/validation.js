@@ -57,7 +57,7 @@ export function normalizarTexto(texto) {
 }
 
 export function sanitizarTexto(texto) {
-    if (texto === null || texto === undefined) return '';
+    if (!texto || typeof texto !== 'string') return '';
     return texto
         .replace(/<[^>]*>/g, '')
         .replace(/\s+/g, ' ')

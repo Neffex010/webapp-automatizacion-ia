@@ -1,3 +1,5 @@
+import { markdownATextoSeguro } from './markdown.js';
+
 export const UI = {
     form: document.getElementById('ai-form'),
     btnSubmit: document.getElementById('btn-submit'),
@@ -53,8 +55,8 @@ export const UI = {
             : 'HTTP Request (Responses API)';
         this.resIntegracion.textContent = integracionTexto;
 
-        // Renderizar como TEXTO (no HTML) para evitar XSS
-        this.resRespuesta.textContent = datos.respuesta || 'Sin respuesta.';
+        // Renderizar Markdown convertido (el escape previo evita XSS)
+        this.resRespuesta.innerHTML = markdownATextoSeguro(datos.respuesta || 'Sin respuesta.');
 
         this.resultContainer.classList.remove('d-none');
         this.resultContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });

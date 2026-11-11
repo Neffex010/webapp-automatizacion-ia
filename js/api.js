@@ -21,8 +21,9 @@ export async function consultarAsistente(datos) {
         if (!response.ok) {
             // Códigos con mensaje específico
             if (response.status === 429) throw new Error('Se alcanzó el límite de consultas. Intente más tarde.');
-            if (response.status === 503) throw new Error('El servicio está temporalmente indisponible.');
-            if (response.status === 401) throw new Error('Error de autenticación en el servidor.');
+            if (response.status === 503) throw new Error('El servicio está temporalmente indisponible. Intente más tarde.');
+            if (response.status === 401) throw new Error('Error de autenticación en el servidor. Contacte al administrador.');
+            if (response.status === 403) throw new Error('Acceso prohibido al servicio.');
 
             let mensajeError = `Error del servidor (HTTP ${response.status}).`;
             try {

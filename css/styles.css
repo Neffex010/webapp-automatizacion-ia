@@ -304,7 +304,6 @@ main {
     border: 2px solid var(--nb-black);
     border-radius: 4px;
     padding: 1rem;
-    white-space: pre-wrap;
     word-wrap: break-word;
     line-height: 1.6;
     max-height: 500px;
@@ -317,6 +316,50 @@ main {
 
 .result-text::-webkit-scrollbar-thumb {
     background-color: var(--nb-black);
+}
+
+/* ---------- Markdown dentro de la respuesta ---------- */
+
+.result-text h1,
+.result-text h2,
+.result-text h3,
+.result-text h4 {
+    margin: 0.75rem 0 0.5rem;
+    color: var(--nb-text);
+    font-weight: 700;
+    line-height: 1.25;
+}
+
+.result-text h1 { font-size: 1.4rem; }
+.result-text h2 { font-size: 1.25rem; }
+.result-text h3 { font-size: 1.1rem; }
+.result-text h4 { font-size: 1rem; }
+
+.result-text strong {
+    font-weight: 700;
+}
+
+.result-text em {
+    font-style: italic;
+}
+
+.result-text ul,
+.result-text ol {
+    padding-left: 2rem;
+    margin: 0.5rem 0;
+}
+
+.result-text li {
+    margin-bottom: 0.25rem;
+}
+
+.result-text p {
+    line-height: 1.6;
+    margin-bottom: 0.75rem;
+}
+
+.result-text > :last-child {
+    margin-bottom: 0;
 }
 
 /* ---------- Responsive y accesibilidad ---------- */
