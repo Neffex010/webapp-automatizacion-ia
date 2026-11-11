@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Asistente académico de TIC con automatización IA vía n8n y OpenAI">
+    <title>3.4 Web app para automatización IA</title>
+    <link rel="icon" href="assets/favicon.ico" type="image/x-icon">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+    <header class="bg-primary text-white py-4 mb-4">
+        <div class="container">
+            <h1 class="h3 mb-1">Asistente Académico de TIC</h1>
+            <p class="mb-0">Consultas automatizadas con IA vía n8n Cloud y OpenAI</p>
+        </div>
+    </header>
+
+    <main class="container mb-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+
+                <!-- Formulario -->
+                <section class="card card-shadow mb-4" aria-labelledby="form-title">
+                    <div class="card-body">
+                        <h2 id="form-title" class="h5 mb-3">Formulario de consulta</h2>
+                        <form id="ai-form" novalidate>
+
+                            <div class="mb-3">
+                                <label for="tema" class="form-label">Tema <span class="text-danger">*</span></label>
+                                <select class="form-select" id="tema" name="tema" required>
+                                    <option value="" disabled selected>Seleccione un tema</option>
+                                    <option value="Inteligencia artificial">Inteligencia artificial</option>
+                                    <option value="Redes">Redes</option>
+                                    <option value="Programación">Programación</option>
+                                    <option value="Bases de datos">Bases de datos</option>
+                                    <option value="Internet de las cosas (IoT)">Internet de las cosas (IoT)</option>
+                                </select>
+                                <div class="invalid-feedback">Seleccione un tema válido.</div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="nivel" class="form-label">Nivel <span class="text-danger">*</span></label>
+                                <select class="form-select" id="nivel" name="nivel" required>
+                                    <option value="" disabled selected>Seleccione el nivel</option>
+                                    <option value="Básico">Básico</option>
+                                    <option value="Intermedio">Intermedio</option>
+                                    <option value="Avanzado">Avanzado</option>
+                                </select>
+                                <div class="invalid-feedback">Seleccione un nivel válido.</div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="pregunta" class="form-label">Pregunta <span
+                                        class="text-danger">*</span></label>
+                                <textarea class="form-control" id="pregunta" name="pregunta" rows="4" maxlength="1000"
+                                    required placeholder="Escriba su consulta técnica..."></textarea>
+                                <div class="form-text d-flex justify-content-between">
+                                    <span>Máximo 1000 caracteres.</span>
+                                    <span id="char-count">0/1000</span>
+                                </div>
+                                <div class="invalid-feedback">Escriba una pregunta válida (mínimo 5 caracteres).</div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="integracion" class="form-label">Mecanismo de integración <span
+                                        class="text-danger">*</span></label>
+                                <select class="form-select" id="integracion" name="integracion" required>
+                                    <option value="" disabled selected>Seleccione la ruta</option>
+                                    <option value="nativo">Nodo OpenAI (Nativo)</option>
+                                    <option value="http">HTTP Request (Responses API)</option>
+                                </select>
+                                <div class="invalid-feedback">Seleccione un mecanismo de integración.</div>
+                            </div>
+
+                            <div class="d-grid gap-2 d-md-flex">
+                                <button type="submit" class="btn btn-primary flex-grow-1" id="btn-submit">
+                                    Consultar asistente
+                                </button>
+                                <button type="reset" class="btn btn-outline-secondary" id="btn-clear">
+                                    Limpiar
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </section>
+
+                <!-- Estado de carga -->
+                <div id="loading-container" class="text-center my-4 d-none" role="status" aria-live="polite">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Consultando...</span>
+                    </div>
+                    <p class="mt-2 text-muted">Consultando el asistente...</p>
+                </div>
+
+                <!-- Errores -->
+                <div id="error-container" class="alert alert-danger d-none" role="alert" aria-live="assertive"></div>
+
+                <!-- Resultado -->
+                <section id="result-container" class="card card-shadow d-none" aria-labelledby="result-title">
+                    <div class="card-header bg-success text-white">
+                        <h2 id="result-title" class="h5 mb-0">Respuesta del asistente</h2>
+                    </div>
+                    <div class="card-body">
+                        <p class="mb-1"><strong>Tema:</strong> <span id="res-tema"></span></p>
+                        <p class="mb-1"><strong>Nivel:</strong> <span id="res-nivel"></span></p>
+                        <p class="mb-3"><strong>Integración usada:</strong> <span id="res-integracion"></span></p>
+                        <hr>
+                        <div id="res-respuesta" class="result-text"></div>
+                    </div>
+                </section>
+
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-dark text-white text-center py-3 mt-auto">
+        <div class="container">
+            <small>
+                Desarrollado para la materia <em>Inteligencia Artificial aplicada a las TIC</em><br>
+                TecNM Campus Pachuca · <span id="developer-name">[Tu nombre]</span>
+            </small>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="module" src="js/main.js"></script>
+</body>
+
+</html>
