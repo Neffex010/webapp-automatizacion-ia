@@ -111,7 +111,7 @@ main {
     height: 44px;
     background-color: var(--nb-yellow);
     color: var(--nb-black);
-    border: var(--nb-border);
+    border: 3px solid var(--nb-black);
     border-radius: 4px;
     box-shadow: 4px 4px 0 var(--nb-black);
     transition: transform 0.15s ease, box-shadow 0.15s ease;
@@ -146,7 +146,8 @@ main {
     display: none;
 }
 
-/* Botón-ícono al repositorio */
+/* Botón-ícono al repositorio: vive sobre el pie turquesa,
+   así que conserva su aspecto blanco con líneas negras en ambos temas */
 .nb-repo-link {
     display: inline-flex;
     align-items: center;
@@ -154,12 +155,12 @@ main {
     width: 40px;
     height: 40px;
     margin-bottom: 0.5rem;
-    background-color: var(--nb-surface);
-    color: var(--nb-text);
+    background-color: #ffffff;
+    color: var(--nb-black);
     text-decoration: none;
-    border: var(--nb-border);
+    border: 3px solid var(--nb-black);
     border-radius: 4px;
-    box-shadow: 4px 4px 0 var(--nb-line);
+    box-shadow: 4px 4px 0 var(--nb-black);
     transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
@@ -167,12 +168,12 @@ main {
     color: var(--nb-black);
     background-color: var(--nb-yellow);
     transform: translate(-2px, -2px);
-    box-shadow: 6px 6px 0 var(--nb-line);
+    box-shadow: 6px 6px 0 var(--nb-black);
 }
 
 .nb-repo-link:active {
     transform: translate(2px, 2px);
-    box-shadow: 1px 1px 0 var(--nb-line);
+    box-shadow: 1px 1px 0 var(--nb-black);
 }
 
 .nb-repo-link:focus-visible {
@@ -184,6 +185,7 @@ main {
 
 .card {
     background-color: var(--nb-surface);
+    color: var(--nb-text);
     border: var(--nb-border);
     border-radius: 4px;
     box-shadow: var(--nb-shadow);
@@ -214,7 +216,7 @@ main {
 .nb-result-header {
     background-color: var(--nb-yellow);
     color: var(--nb-black);
-    border-bottom: var(--nb-border);
+    border-bottom: 3px solid var(--nb-black);
     border-radius: 4px 4px 0 0;
 }
 
@@ -237,9 +239,9 @@ main {
     padding: 0.35rem 0.75rem;
     color: var(--nb-black);
     background-color: var(--nb-teal);
-    border: var(--nb-border);
+    border: 3px solid var(--nb-black);
     border-radius: 4px;
-    box-shadow: 3px 3px 0 var(--nb-line);
+    box-shadow: 3px 3px 0 var(--nb-black);
     font-weight: 500;
 }
 
@@ -314,6 +316,11 @@ main {
 .invalid-feedback {
     color: var(--nb-red);
     font-weight: 500;
+}
+
+/* Asteriscos de campo requerido legibles sobre tarjeta oscura */
+[data-tema="oscuro"] .text-danger {
+    color: var(--nb-red) !important;
 }
 
 /* Campo inválido: borde y sombra rojos, sin iconografía de Bootstrap */
@@ -449,6 +456,11 @@ main {
     padding: 1rem 1.25rem;
     color: var(--nb-red);
     font-weight: 700;
+}
+
+/* Reintentar: fondo amarillo con borde negro en ambos temas */
+.nb-alert .btn-warning {
+    border-color: var(--nb-black);
 }
 
 /* Estado vacío inicial */
