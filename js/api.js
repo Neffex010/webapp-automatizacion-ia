@@ -19,6 +19,11 @@ export async function consultarAsistente(datos) {
 
         // 1. Manejo de errores HTTP
         if (!response.ok) {
+            // Códigos con mensaje específico
+            if (response.status === 429) throw new Error('Se alcanzó el límite de consultas. Intente más tarde.');
+            if (response.status === 503) throw new Error('El servicio está temporalmente indisponible.');
+            if (response.status === 401) throw new Error('Error de autenticación en el servidor.');
+
             let mensajeError = `Error del servidor (HTTP ${response.status}).`;
             try {
                 const errorData = await response.json();
@@ -43,7 +48,12 @@ export async function consultarAsistente(datos) {
             resultado = resultado[0];
         }
 
-        // 4. Normalización flexible de la respuesta
+        // 4. Validación: JSON vacío o sin campos 'ok' ni 'respuesta'
+        if (!resultado || typeof resultado !== 'object' || (!('ok' in resultado) && !('respuesta' in resultado))) {
+            throw new Error('El servidor no devolvió una respuesta válida.');
+        }
+
+        // 5. Normalización flexible de la respuesta
         const esExito = resultado.ok === true || resultado.ok === "true";
 
         if (esExito) {

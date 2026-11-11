@@ -1,14 +1,14 @@
-import { validarFormulario, normalizarTexto } from './validation.js';
+import { validarFormulario, normalizarTexto, sanitizarTexto, validarPreguntaSignificativa } from './validation.js';
 import { consultarAsistente } from './api.js';
 import { UI } from './ui.js';
 
 function obtenerDatosFormulario() {
     const formData = new FormData(UI.form);
     return {
-        tema: normalizarTexto(formData.get('tema')),
-        nivel: normalizarTexto(formData.get('nivel')),
-        pregunta: normalizarTexto(formData.get('pregunta')),
-        integracion: normalizarTexto(formData.get('integracion'))
+        tema: sanitizarTexto(formData.get('tema')),
+        nivel: sanitizarTexto(formData.get('nivel')),
+        pregunta: sanitizarTexto(formData.get('pregunta')),
+        integracion: sanitizarTexto(formData.get('integracion'))
     };
 }
 
@@ -24,6 +24,11 @@ async function manejarEnvio(evento) {
         return;
     }
 
+    if (!validarPreguntaSignificativa(datos.pregunta)) {
+        UI.mostrarError('La pregunta debe tener al menos 5 caracteres visibles.');
+        return;
+    }
+
     UI.setLoading(true);
 
     try {
@@ -36,7 +41,11 @@ async function manejarEnvio(evento) {
         }
     } catch (error) {
         console.error('Error:', error);
-        UI.mostrarError(error.message || 'No se pudo conectar con el asistente.');
+        if (error.message.includes('red') || error.message.includes('CORS') || error.message.includes('tardó')) {
+            UI.mostrarErrorConReintento(error.message, () => manejarEnvio(new Event('submit')));
+        } else {
+            UI.mostrarError(error.message);
+        }
     } finally {
         UI.setLoading(false);
     }

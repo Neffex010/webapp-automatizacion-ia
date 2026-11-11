@@ -34,6 +34,16 @@ export const UI = {
         this.errorContainer.classList.add('d-none');
     },
 
+    mostrarErrorConReintento(mensaje, callback) {
+        this.errorContainer.innerHTML = `${mensaje} <button type="button" class="btn btn-sm btn-warning ms-2" id="btn-retry">Reintentar</button>`;
+        this.errorContainer.classList.remove('d-none');
+        this.resultContainer.classList.add('d-none');
+        document.getElementById('btn-retry').addEventListener('click', () => {
+            this.ocultarError();
+            callback();
+        });
+    },
+
     mostrarResultado(datos) {
         this.resTema.textContent = datos.tema || '—';
         this.resNivel.textContent = datos.nivel || '—';

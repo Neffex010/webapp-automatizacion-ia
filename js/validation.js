@@ -55,3 +55,15 @@ export function normalizarTexto(texto) {
     if (!texto) return '';
     return texto.trim().replace(/\s+/g, ' ');
 }
+
+export function sanitizarTexto(texto) {
+    if (texto === null || texto === undefined) return '';
+    return texto
+        .replace(/<[^>]*>/g, '')
+        .replace(/\s+/g, ' ')
+        .trim();
+}
+
+export function validarPreguntaSignificativa(texto) {
+    return sanitizarTexto(texto).length >= 5;
+}
