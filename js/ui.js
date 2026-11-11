@@ -12,6 +12,7 @@ export const UI = {
     btnSubmit: document.getElementById('btn-submit'),
     btnClear: document.getElementById('btn-clear'),
     btnTheme: document.getElementById('btn-theme'),
+    btnNueva: document.getElementById('btn-nueva-consulta'),
     loadingContainer: document.getElementById('loading-container'),
     loadingText: document.getElementById('loading-text'),
     errorContainer: document.getElementById('error-container'),
@@ -19,6 +20,7 @@ export const UI = {
     emptyState: document.getElementById('empty-state'),
     charCount: document.getElementById('char-count'),
     preguntaField: document.getElementById('pregunta'),
+    formCard: document.getElementById('ai-form').closest('section'),
     main: document.querySelector('main'),
     tituloDocumento: document.title,
 
@@ -158,6 +160,23 @@ export const UI = {
     },
 
     /* ---------- Utilidades ---------- */
+
+    // "Nueva consulta": vuelve al formulario conservando tema, nivel e integración
+    prepararNuevaConsulta() {
+        this.ocultarError();
+        this.limpiarErrorCampo('pregunta');
+        this.preguntaField.value = '';
+        this.actualizarContadorCaracteres();
+        this.resultContainer.classList.add('d-none');
+        this.emptyState.classList.remove('d-none');
+
+        this.formCard.scrollIntoView({
+            behavior: this.movimientoSuave() ? 'smooth' : 'auto',
+            block: 'start'
+        });
+        // El foco abre el teclado en móvil; preventScroll evita un segundo salto
+        this.preguntaField.focus({ preventScroll: true });
+    },
 
     movimientoSuave() {
         return !window.matchMedia('(prefers-reduced-motion: reduce)').matches;

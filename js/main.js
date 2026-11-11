@@ -64,6 +64,7 @@ UI.btnClear.addEventListener('click', () => {
     setTimeout(() => UI.limpiarFormulario(), 0);
 });
 UI.preguntaField.addEventListener('input', () => UI.actualizarContadorCaracteres());
+UI.btnNueva.addEventListener('click', () => UI.prepararNuevaConsulta());
 
 // Ctrl+Enter (o Cmd+Enter) envía desde el textarea
 UI.preguntaField.addEventListener('keydown', (evento) => {

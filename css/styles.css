@@ -214,10 +214,50 @@ main {
 }
 
 .nb-result-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.75rem;
     background-color: var(--nb-yellow);
     color: var(--nb-black);
     border-bottom: 3px solid var(--nb-black);
     border-radius: 4px 4px 0 0;
+}
+
+/* Botón "Nueva consulta": vive sobre el encabezado amarillo,
+   así que conserva líneas negras y fondo blanco en ambos temas */
+.nb-btn-nueva {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.35rem 0.75rem;
+    background-color: #ffffff;
+    color: var(--nb-black);
+    border: 3px solid var(--nb-black);
+    border-radius: 4px;
+    box-shadow: 3px 3px 0 var(--nb-black);
+    font-family: var(--nb-font);
+    font-size: 0.875rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+}
+
+.nb-btn-nueva:hover {
+    background-color: #F5F1E8;
+    transform: translate(-2px, -2px);
+    box-shadow: 5px 5px 0 var(--nb-black);
+}
+
+.nb-btn-nueva:active {
+    transform: translate(2px, 2px);
+    box-shadow: 1px 1px 0 var(--nb-black);
+}
+
+.nb-btn-nueva:focus-visible {
+    outline: 3px solid var(--nb-black);
+    outline-offset: 2px;
 }
 
 .nb-card-result hr {
@@ -586,7 +626,8 @@ main {
 
     .btn,
     .nb-theme-toggle,
-    .nb-repo-link {
+    .nb-repo-link,
+    .nb-btn-nueva {
         transition: none;
     }
 
