@@ -1,6 +1,7 @@
-import { validarFormulario, normalizarTexto, sanitizarTexto, validarPreguntaSignificativa } from './validation.js';
+import { validarFormulario, sanitizarTexto, validarPreguntaSignificativa } from './validation.js';
 import { consultarAsistente } from './api.js';
 import { UI } from './ui.js';
+import { aplicarTema, temaInicial, alternarTema, sincronizarConPreferenciaSistema } from './theme.js';
 
 function obtenerDatosFormulario() {
     const formData = new FormData(UI.form);
@@ -15,17 +16,18 @@ function obtenerDatosFormulario() {
 async function manejarEnvio(evento) {
     evento.preventDefault();
     UI.ocultarError();
+    UI.limpiarErroresCampos();
 
     const datos = obtenerDatosFormulario();
     const validacion = validarFormulario(datos);
 
     if (!validacion.esValido) {
-        UI.mostrarError(validacion.errores.join(' '));
+        UI.mostrarErroresCampos(validacion.campos);
         return;
     }
 
     if (!validarPreguntaSignificativa(datos.pregunta)) {
-        UI.mostrarError('La pregunta debe tener al menos 5 caracteres visibles.');
+        UI.mostrarErroresCampos({ pregunta: 'La pregunta debe tener al menos 5 caracteres visibles.' });
         return;
     }
 
@@ -51,10 +53,29 @@ async function manejarEnvio(evento) {
     }
 }
 
+// Tema visual: aplicar el guardado y permitir alternar
+aplicarTema(temaInicial());
+sincronizarConPreferenciaSistema();
+UI.btnTheme.addEventListener('click', alternarTema);
+
 // Inicialización
 UI.form.addEventListener('submit', manejarEnvio);
 UI.btnClear.addEventListener('click', () => {
     setTimeout(() => UI.limpiarFormulario(), 0);
 });
 UI.preguntaField.addEventListener('input', () => UI.actualizarContadorCaracteres());
+
+// Ctrl+Enter (o Cmd+Enter) envía desde el textarea
+UI.preguntaField.addEventListener('keydown', (evento) => {
+    if ((evento.ctrlKey || evento.metaKey) && evento.key === 'Enter') {
+        evento.preventDefault();
+        UI.form.requestSubmit();
+    }
+});
+
+// Al editar un campo, se limpia su error inline
+for (const [nombre, campo] of Object.entries(UI.campos)) {
+    campo.addEventListener(nombre === 'pregunta' ? 'input' : 'change', () => UI.limpiarErrorCampo(nombre));
+}
+
 UI.actualizarContadorCaracteres();

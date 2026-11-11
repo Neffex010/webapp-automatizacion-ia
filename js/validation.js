@@ -30,23 +30,21 @@ export function validarIntegracion(valor) {
 }
 
 export function validarFormulario(datos) {
-    const errores = [];
+    // Errores por campo (null si el campo es válido)
+    const campos = {
+        tema: validarTema(datos.tema) ? null : 'Seleccione un tema válido.',
+        nivel: validarNivel(datos.nivel) ? null : 'Seleccione un nivel válido.',
+        pregunta: validarCampoTexto(datos.pregunta)
+            ? null
+            : `La pregunta debe tener entre 5 y ${CONFIG.MAX_PREGUNTA_LENGTH} caracteres.`,
+        integracion: validarIntegracion(datos.integracion) ? null : 'Seleccione un mecanismo de integración válido.'
+    };
 
-    if (!validarTema(datos.tema)) {
-        errores.push('Seleccione un tema válido.');
-    }
-    if (!validarNivel(datos.nivel)) {
-        errores.push('Seleccione un nivel válido.');
-    }
-    if (!validarCampoTexto(datos.pregunta)) {
-        errores.push(`La pregunta debe tener entre 5 y ${CONFIG.MAX_PREGUNTA_LENGTH} caracteres.`);
-    }
-    if (!validarIntegracion(datos.integracion)) {
-        errores.push('Seleccione un mecanismo de integración válido.');
-    }
+    const errores = Object.values(campos).filter(Boolean);
 
     return {
         esValido: errores.length === 0,
+        campos,
         errores
     };
 }

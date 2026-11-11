@@ -3,19 +3,40 @@
    Bootstrap 5 permanece como base; estas reglas lo sobrescriben.
    ============================================================ */
 
-/* Variables del sistema */
+/* Variables del sistema (tema claro) */
 :root {
     --nb-cream: #F5F1E8;       /* fondo general */
     --nb-orange: #FF6B35;      /* primario */
     --nb-teal: #4ECDC4;        /* secundario */
     --nb-yellow: #FFE66D;      /* acento */
     --nb-yellow-soft: #FFF6C9; /* fondo del resultado */
-    --nb-text: #2D3436;        /* texto */
-    --nb-black: #1A1A1A;       /* bordes */
+    --nb-text: #2D3436;        /* texto general (gira en oscuro) */
+    --nb-black: #1A1A1A;       /* texto fijo sobre fondos de color */
+    --nb-line: #1A1A1A;        /* bordes y sombras (gira en oscuro) */
+    --nb-surface: #ffffff;     /* superficies: tarjetas, alertas (gira) */
     --nb-red: #C0392B;         /* errores */
-    --nb-border: 3px solid var(--nb-black);
-    --nb-shadow: 6px 6px 0 var(--nb-black);
+    --nb-warn: #B7950B;        /* aviso del contador de caracteres */
+    --nb-muted: #6b6b64;       /* texto secundario */
+    --nb-placeholder: #7a7a72; /* placeholder */
+    --nb-border: 3px solid var(--nb-line);
+    --nb-shadow: 6px 6px 0 var(--nb-line);
+    --nb-select-arrow: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%231A1A1A' stroke-width='2.5' d='m4 6 4 4 4-4'/%3e%3c/svg%3e");
     --nb-font: 'Space Grotesk', 'Segoe UI', sans-serif;
+}
+
+/* Tema oscuro: fondos profundos, líneas crema, acentos vibrantes */
+[data-tema="oscuro"] {
+    --nb-cream: #242428;
+    --nb-yellow-soft: #2F2D26;
+    --nb-text: #F5F1E8;
+    --nb-line: #F5F1E8;
+    --nb-surface: #2B2B30;
+    --nb-red: #FF7B72;
+    --nb-warn: #FFE66D;
+    --nb-muted: #B9B9AF;
+    --nb-placeholder: #9a9a90;
+    --nb-select-arrow: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23F5F1E8' stroke-width='2.5' d='m4 6 4 4 4-4'/%3e%3c/svg%3e");
+    color-scheme: dark;
 }
 
 /* ---------- Base ---------- */
@@ -43,11 +64,20 @@ main {
 }
 
 /* ---------- Encabezado y pie ---------- */
+/* Mantienen texto oscuro sobre sus colores vibrantes en ambos temas. */
 
 .nb-header {
     background-color: var(--nb-orange);
+    color: var(--nb-black);
     border-bottom: var(--nb-border);
     padding: 1.5rem 0;
+}
+
+.nb-header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
 }
 
 .nb-title {
@@ -65,9 +95,55 @@ main {
 
 .nb-footer {
     background-color: var(--nb-teal);
+    color: var(--nb-black);
     border-top: var(--nb-border);
     padding: 1rem 0;
     font-weight: 500;
+}
+
+/* Conmutador de tema claro/oscuro */
+.nb-theme-toggle {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    background-color: var(--nb-yellow);
+    color: var(--nb-black);
+    border: var(--nb-border);
+    border-radius: 4px;
+    box-shadow: 4px 4px 0 var(--nb-black);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    cursor: pointer;
+}
+
+.nb-theme-toggle:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 var(--nb-black);
+}
+
+.nb-theme-toggle:active {
+    transform: translate(2px, 2px);
+    box-shadow: 1px 1px 0 var(--nb-black);
+}
+
+.nb-theme-toggle:focus-visible {
+    outline: 3px solid var(--nb-black);
+    outline-offset: 2px;
+}
+
+/* Luna en claro, sol en oscuro */
+.nb-icon-sol {
+    display: none;
+}
+
+[data-tema="oscuro"] .nb-icon-sol {
+    display: block;
+}
+
+[data-tema="oscuro"] .nb-icon-luna {
+    display: none;
 }
 
 /* Botón-ícono al repositorio */
@@ -78,12 +154,12 @@ main {
     width: 40px;
     height: 40px;
     margin-bottom: 0.5rem;
-    background-color: #ffffff;
-    color: var(--nb-black);
+    background-color: var(--nb-surface);
+    color: var(--nb-text);
     text-decoration: none;
     border: var(--nb-border);
     border-radius: 4px;
-    box-shadow: 4px 4px 0 var(--nb-black);
+    box-shadow: 4px 4px 0 var(--nb-line);
     transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
@@ -91,12 +167,12 @@ main {
     color: var(--nb-black);
     background-color: var(--nb-yellow);
     transform: translate(-2px, -2px);
-    box-shadow: 6px 6px 0 var(--nb-black);
+    box-shadow: 6px 6px 0 var(--nb-line);
 }
 
 .nb-repo-link:active {
     transform: translate(2px, 2px);
-    box-shadow: 1px 1px 0 var(--nb-black);
+    box-shadow: 1px 1px 0 var(--nb-line);
 }
 
 .nb-repo-link:focus-visible {
@@ -107,7 +183,7 @@ main {
 /* ---------- Tarjetas ---------- */
 
 .card {
-    background-color: #ffffff;
+    background-color: var(--nb-surface);
     border: var(--nb-border);
     border-radius: 4px;
     box-shadow: var(--nb-shadow);
@@ -117,21 +193,70 @@ main {
     font-weight: 700;
 }
 
-/* Tarjeta de resultado: fondo amarillo suave */
+/* Tarjeta de resultado: fondo amarillo suave + animación de entrada */
 .nb-card-result {
     background-color: var(--nb-yellow-soft);
+    animation: nb-entrada 0.25s ease-out;
+}
+
+@keyframes nb-entrada {
+    from {
+        opacity: 0;
+        transform: translateY(16px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .nb-result-header {
     background-color: var(--nb-yellow);
-    color: var(--nb-text);
+    color: var(--nb-black);
     border-bottom: var(--nb-border);
     border-radius: 4px 4px 0 0;
 }
 
 .nb-card-result hr {
-    border-top: 3px dashed var(--nb-black);
+    border-top: 3px dashed var(--nb-line);
     opacity: 1;
+}
+
+/* Chips de metadatos del resultado */
+.nb-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+}
+
+.nb-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.35rem 0.75rem;
+    color: var(--nb-black);
+    background-color: var(--nb-teal);
+    border: var(--nb-border);
+    border-radius: 4px;
+    box-shadow: 3px 3px 0 var(--nb-line);
+    font-weight: 500;
+}
+
+.nb-chip strong {
+    font-weight: 700;
+}
+
+.nb-chip-tema {
+    background-color: var(--nb-teal);
+}
+
+.nb-chip-nivel {
+    background-color: var(--nb-yellow);
+}
+
+.nb-chip-integracion {
+    background-color: var(--nb-orange);
 }
 
 /* ---------- Formulario ---------- */
@@ -149,34 +274,62 @@ main {
     font-family: var(--nb-font);
 }
 
-/* Flecha del select en negro, más gruesa */
+/* Flecha del select según el tema */
 .form-select {
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%231A1A1A' stroke-width='2.5' d='m4 6 4 4 4-4'/%3e%3c/svg%3e");
+    background-image: var(--nb-select-arrow);
 }
 
 .form-control:focus,
 .form-select:focus {
-    background-color: #ffffff;
-    border-color: var(--nb-black);
+    background-color: var(--nb-surface);
+    border-color: var(--nb-line);
     box-shadow: 4px 4px 0 var(--nb-teal);
 }
 
 .form-control::placeholder {
-    color: #7a7a72;
+    color: var(--nb-placeholder);
     opacity: 1;
 }
 
 .form-text {
-    color: #6b6b64;
+    color: var(--nb-muted);
 }
 
 #char-count {
     font-variant-numeric: tabular-nums;
+    font-weight: 500;
+}
+
+/* Contador reactivo cerca del límite */
+.nb-count-warning {
+    color: var(--nb-warn);
+    font-weight: 700;
+}
+
+.nb-count-danger {
+    color: var(--nb-red);
+    font-weight: 700;
 }
 
 .invalid-feedback {
     color: var(--nb-red);
     font-weight: 500;
+}
+
+/* Campo inválido: borde y sombra rojos, sin iconografía de Bootstrap */
+.form-control.is-invalid,
+.form-select.is-invalid {
+    border-color: var(--nb-red);
+    box-shadow: 3px 3px 0 var(--nb-red);
+}
+
+.form-control.is-invalid {
+    background-image: none;
+}
+
+.form-control.is-invalid:focus,
+.form-select.is-invalid:focus {
+    box-shadow: 4px 4px 0 var(--nb-teal);
 }
 
 /* ---------- Botones ---------- */
@@ -191,7 +344,7 @@ main {
 }
 
 .btn:focus-visible {
-    outline: 3px solid var(--nb-black);
+    outline: 3px solid var(--nb-line);
     outline-offset: 2px;
     box-shadow: var(--nb-shadow);
 }
@@ -200,60 +353,60 @@ main {
 .btn-primary {
     color: var(--nb-black);
     background-color: var(--nb-orange);
-    border-color: var(--nb-black);
+    border-color: var(--nb-line);
     box-shadow: var(--nb-shadow);
 }
 
 .btn-primary:hover {
     color: var(--nb-black);
     background-color: var(--nb-orange);
-    border-color: var(--nb-black);
+    border-color: var(--nb-line);
     transform: translate(-2px, -2px);
-    box-shadow: 8px 8px 0 var(--nb-black);
+    box-shadow: 8px 8px 0 var(--nb-line);
 }
 
 .btn-primary:active {
     color: var(--nb-black);
     background-color: var(--nb-orange);
-    border-color: var(--nb-black);
+    border-color: var(--nb-line);
     transform: translate(2px, 2px);
-    box-shadow: 2px 2px 0 var(--nb-black);
+    box-shadow: 2px 2px 0 var(--nb-line);
 }
 
 .btn-primary:disabled {
     color: var(--nb-black);
     background-color: var(--nb-orange);
-    border-color: var(--nb-black);
+    border-color: var(--nb-line);
     opacity: 0.55;
     box-shadow: none;
     transform: none;
 }
 
-/* Secundario (limpiar): blanco, se tiñe de amarillo al pasar el cursor */
+/* Secundario (limpiar): superficie, se tiñe de amarillo al pasar el cursor */
 .btn-outline-secondary {
     color: var(--nb-text);
-    background-color: #ffffff;
-    border-color: var(--nb-black);
+    background-color: var(--nb-surface);
+    border-color: var(--nb-line);
     box-shadow: var(--nb-shadow);
 }
 
 .btn-outline-secondary:hover {
-    color: var(--nb-text);
+    color: var(--nb-black);
     background-color: var(--nb-yellow);
-    border-color: var(--nb-black);
+    border-color: var(--nb-line);
     transform: translate(-2px, -2px);
-    box-shadow: 8px 8px 0 var(--nb-black);
+    box-shadow: 8px 8px 0 var(--nb-line);
 }
 
 .btn-outline-secondary:active {
-    color: var(--nb-text);
+    color: var(--nb-black);
     background-color: var(--nb-yellow);
-    border-color: var(--nb-black);
+    border-color: var(--nb-line);
     transform: translate(2px, 2px);
-    box-shadow: 2px 2px 0 var(--nb-black);
+    box-shadow: 2px 2px 0 var(--nb-line);
 }
 
-/* ---------- Estados: carga, error y resultado ---------- */
+/* ---------- Estados: carga, error, vacío y resultado ---------- */
 
 /* Spinner cuadrado */
 .nb-spinner {
@@ -283,13 +436,13 @@ main {
 }
 
 .nb-muted {
-    color: #6b6b64;
+    color: var(--nb-muted);
     font-weight: 500;
 }
 
 /* Alerta de error */
 .nb-alert {
-    background-color: #ffffff;
+    background-color: var(--nb-surface);
     border: var(--nb-border);
     border-radius: 4px;
     box-shadow: var(--nb-shadow);
@@ -298,10 +451,33 @@ main {
     font-weight: 700;
 }
 
+/* Estado vacío inicial */
+.nb-empty {
+    padding: 1.5rem 1rem;
+}
+
+.nb-empty .nb-empty-robot {
+    display: block;
+    margin: 0 auto 0.75rem;
+    animation: nb-flotar 4s ease-in-out infinite;
+}
+
+@keyframes nb-flotar {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-8px);
+    }
+}
+
 /* Cuerpo de la respuesta */
 .result-text {
-    background-color: #ffffff;
-    border: 2px solid var(--nb-black);
+    background-color: var(--nb-surface);
+    border: 2px solid var(--nb-line);
     border-radius: 4px;
     padding: 1rem;
     word-wrap: break-word;
@@ -315,7 +491,7 @@ main {
 }
 
 .result-text::-webkit-scrollbar-thumb {
-    background-color: var(--nb-black);
+    background-color: var(--nb-line);
 }
 
 /* ---------- Markdown dentro de la respuesta ---------- */
@@ -365,17 +541,24 @@ main {
 /* ---------- Responsive y accesibilidad ---------- */
 
 @media (max-width: 576px) {
-    :root {
-        --nb-shadow: 4px 4px 0 var(--nb-black);
+
+    :root,
+    [data-tema="oscuro"] {
+        --nb-shadow: 4px 4px 0 var(--nb-line);
     }
 
     .btn-primary:hover,
     .btn-outline-secondary:hover {
-        box-shadow: 6px 6px 0 var(--nb-black);
+        box-shadow: 6px 6px 0 var(--nb-line);
     }
 
     .nb-title {
         font-size: 1.5rem;
+    }
+
+    .nb-theme-toggle {
+        width: 40px;
+        height: 40px;
     }
 
     .card-body {
@@ -384,11 +567,22 @@ main {
 }
 
 @media (prefers-reduced-motion: reduce) {
+
     .nb-spinner {
         animation: none;
     }
 
-    .btn {
+    .btn,
+    .nb-theme-toggle,
+    .nb-repo-link {
         transition: none;
+    }
+
+    .nb-card-result {
+        animation: none;
+    }
+
+    .nb-empty .nb-empty-robot {
+        animation: none;
     }
 }

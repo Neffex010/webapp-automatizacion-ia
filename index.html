@@ -7,6 +7,17 @@
     <meta name="description" content="Asistente académico de TIC con automatización IA vía n8n y OpenAI">
     <title>3.4 Web app para automatización IA</title>
 
+    <!-- Aplica el tema guardado antes del primer pintado (evita destello) -->
+    <script>
+        (function () {
+            var tema = localStorage.getItem('nb-tema');
+            if (tema !== 'claro' && tema !== 'oscuro') {
+                tema = matchMedia('(prefers-color-scheme: dark)').matches ? 'oscuro' : 'claro';
+            }
+            document.documentElement.dataset.tema = tema;
+        })();
+    </script>
+
     <!-- Favicon inline SVG: robot neobrutalista -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2064%2064'%3E%3Crect%20x='1.5'%20y='1.5'%20width='61'%20height='61'%20fill='%23FFE66D'%20stroke='%231A1A1A'%20stroke-width='3'/%3E%3Ccircle%20cx='32'%20cy='12'%20r='4'%20fill='%23FF6B35'%20stroke='%231A1A1A'%20stroke-width='2.5'/%3E%3Cline%20x1='32'%20y1='16'%20x2='32'%20y2='22'%20stroke='%231A1A1A'%20stroke-width='3'/%3E%3Crect%20x='12'%20y='22'%20width='40'%20height='24'%20fill='%234ECDC4'%20stroke='%231A1A1A'%20stroke-width='3'/%3E%3Crect%20x='19'%20y='28'%20width='9'%20height='9'%20fill='%23F5F1E8'%20stroke='%231A1A1A'%20stroke-width='2'/%3E%3Crect%20x='36'%20y='28'%20width='9'%20height='9'%20fill='%23F5F1E8'%20stroke='%231A1A1A'%20stroke-width='2'/%3E%3Crect%20x='19'%20y='40'%20width='26'%20height='4'%20fill='%231A1A1A'/%3E%3Crect%20x='20'%20y='50'%20width='24'%20height='9'%20fill='%23FF6B35'%20stroke='%231A1A1A'%20stroke-width='3'/%3E%3C/svg%3E">
 
@@ -25,9 +36,30 @@
 <body>
     <!-- Encabezado -->
     <header class="nb-header">
-        <div class="container">
-            <h1 class="nb-title">Asistente Académico de TIC</h1>
-            <p class="nb-subtitle">Consultas automatizadas con IA vía n8n Cloud y OpenAI</p>
+        <div class="container nb-header-row">
+            <div>
+                <h1 class="nb-title">Asistente Académico de TIC</h1>
+                <p class="nb-subtitle">Consultas automatizadas con IA vía n8n Cloud y OpenAI</p>
+            </div>
+            <button type="button" id="btn-theme" class="nb-theme-toggle" aria-label="Activar modo oscuro"
+                aria-pressed="false" title="Cambiar tema">
+                <svg class="nb-icon-luna" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"
+                    fill="currentColor" aria-hidden="true">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+                </svg>
+                <svg class="nb-icon-sol" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"
+                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+                    <circle cx="12" cy="12" r="5" fill="currentColor" stroke="none" />
+                    <line x1="12" y1="1.5" x2="12" y2="3.5" />
+                    <line x1="12" y1="20.5" x2="12" y2="22.5" />
+                    <line x1="1.5" y1="12" x2="3.5" y2="12" />
+                    <line x1="20.5" y1="12" x2="22.5" y2="12" />
+                    <line x1="4.6" y1="4.6" x2="6" y2="6" />
+                    <line x1="18" y1="18" x2="19.4" y2="19.4" />
+                    <line x1="19.4" y1="4.6" x2="18" y2="6" />
+                    <line x1="6" y1="18" x2="4.6" y2="19.4" />
+                </svg>
+            </button>
         </div>
     </header>
 
@@ -43,7 +75,7 @@
 
                             <div class="mb-3">
                                 <label for="tema" class="form-label">Tema <span class="text-danger">*</span></label>
-                                <select class="form-select" id="tema" name="tema" required>
+                                <select class="form-select" id="tema" name="tema" required aria-describedby="error-tema">
                                     <option value="" disabled selected>Seleccione un tema</option>
                                     <option value="Inteligencia artificial">Inteligencia artificial</option>
                                     <option value="Redes">Redes</option>
@@ -51,41 +83,45 @@
                                     <option value="Bases de datos">Bases de datos</option>
                                     <option value="Internet de las cosas (IoT)">Internet de las cosas (IoT)</option>
                                 </select>
-                                <div class="invalid-feedback">Seleccione un tema válido.</div>
+                                <div class="invalid-feedback" id="error-tema">Seleccione un tema válido.</div>
                             </div>
 
                             <div class="mb-3">
                                 <label for="nivel" class="form-label">Nivel <span class="text-danger">*</span></label>
-                                <select class="form-select" id="nivel" name="nivel" required>
+                                <select class="form-select" id="nivel" name="nivel" required aria-describedby="error-nivel">
                                     <option value="" disabled selected>Seleccione el nivel</option>
                                     <option value="Básico">Básico</option>
                                     <option value="Intermedio">Intermedio</option>
                                     <option value="Avanzado">Avanzado</option>
                                 </select>
-                                <div class="invalid-feedback">Seleccione un nivel válido.</div>
+                                <div class="invalid-feedback" id="error-nivel">Seleccione un nivel válido.</div>
                             </div>
 
                             <div class="mb-3">
                                 <label for="pregunta" class="form-label">Pregunta <span
                                         class="text-danger">*</span></label>
                                 <textarea class="form-control" id="pregunta" name="pregunta" rows="4" maxlength="1000"
-                                    required placeholder="Escriba su consulta técnica..."></textarea>
+                                    required placeholder="Escriba su consulta técnica..."
+                                    aria-describedby="error-pregunta"></textarea>
                                 <div class="form-text d-flex justify-content-between">
-                                    <span>Máximo 1000 caracteres.</span>
+                                    <span>Máximo 1000 caracteres · Ctrl+Enter para enviar</span>
                                     <span id="char-count">0/1000</span>
                                 </div>
-                                <div class="invalid-feedback">Escriba una pregunta válida (mínimo 5 caracteres).</div>
+                                <div class="invalid-feedback" id="error-pregunta">Escriba una pregunta válida (mínimo 5
+                                    caracteres).</div>
                             </div>
 
                             <div class="mb-3">
                                 <label for="integracion" class="form-label">Mecanismo de integración <span
                                         class="text-danger">*</span></label>
-                                <select class="form-select" id="integracion" name="integracion" required>
+                                <select class="form-select" id="integracion" name="integracion" required
+                                    aria-describedby="error-integracion">
                                     <option value="" disabled selected>Seleccione la ruta</option>
                                     <option value="nativo">Nodo OpenAI (Nativo)</option>
                                     <option value="http">HTTP Request (Responses API)</option>
                                 </select>
-                                <div class="invalid-feedback">Seleccione un mecanismo de integración.</div>
+                                <div class="invalid-feedback" id="error-integracion">Seleccione un mecanismo de
+                                    integración.</div>
                             </div>
 
                             <div class="d-grid gap-2 d-md-flex">
@@ -101,14 +137,36 @@
                 </section>
 
                 <!-- Estado de carga -->
-                <div id="loading-container" class="text-center my-4 d-none" role="status" aria-live="polite">
+                <div id="loading-container" class="text-center my-4 d-none">
                     <div class="nb-spinner" aria-hidden="true"></div>
-                    <span class="visually-hidden">Consultando...</span>
-                    <p class="mt-3 mb-0 nb-muted">Consultando el asistente...</p>
+                    <p class="mt-3 mb-0 nb-muted" id="loading-text" aria-hidden="true">Enviando consulta…</p>
+                    <span class="visually-hidden" role="status">Consultando el asistente…</span>
                 </div>
 
-                <!-- Errores -->
+                <!-- Errores de servidor/red -->
                 <div id="error-container" class="nb-alert d-none" role="alert" aria-live="assertive"></div>
+
+                <!-- Estado vacío inicial -->
+                <div id="empty-state" class="nb-empty text-center my-4">
+                    <svg class="nb-empty-robot" xmlns="http://www.w3.org/2000/svg" width="72" height="72"
+                        viewBox="0 0 64 64" aria-hidden="true">
+                        <rect x="1.5" y="1.5" width="61" height="61"
+                            style="fill: var(--nb-yellow); stroke: var(--nb-line); stroke-width: 3;" />
+                        <circle cx="32" cy="12" r="4"
+                            style="fill: var(--nb-orange); stroke: var(--nb-line); stroke-width: 2.5;" />
+                        <line x1="32" y1="16" x2="32" y2="22" style="stroke: var(--nb-line); stroke-width: 3;" />
+                        <rect x="12" y="22" width="40" height="24"
+                            style="fill: var(--nb-teal); stroke: var(--nb-line); stroke-width: 3;" />
+                        <rect x="19" y="28" width="9" height="9"
+                            style="fill: var(--nb-surface); stroke: var(--nb-line); stroke-width: 2;" />
+                        <rect x="36" y="28" width="9" height="9"
+                            style="fill: var(--nb-surface); stroke: var(--nb-line); stroke-width: 2;" />
+                        <rect x="19" y="40" width="26" height="4" style="fill: var(--nb-line);" />
+                        <rect x="20" y="50" width="24" height="9"
+                            style="fill: var(--nb-orange); stroke: var(--nb-line); stroke-width: 3;" />
+                    </svg>
+                    <p class="nb-muted mb-0">Completa el formulario para consultar al asistente.</p>
+                </div>
 
                 <!-- Resultado -->
                 <section id="result-container" class="card nb-card-result d-none" aria-labelledby="result-title">
@@ -116,9 +174,13 @@
                         <h2 id="result-title" class="h5 nb-card-title mb-0">Respuesta del asistente</h2>
                     </div>
                     <div class="card-body">
-                        <p class="mb-1"><strong>Tema:</strong> <span id="res-tema"></span></p>
-                        <p class="mb-1"><strong>Nivel:</strong> <span id="res-nivel"></span></p>
-                        <p class="mb-3"><strong>Integración usada:</strong> <span id="res-integracion"></span></p>
+                        <div class="nb-chips mb-3">
+                            <span class="nb-chip nb-chip-tema"><strong>Tema:</strong> <span id="res-tema"></span></span>
+                            <span class="nb-chip nb-chip-nivel"><strong>Nivel:</strong> <span
+                                    id="res-nivel"></span></span>
+                            <span class="nb-chip nb-chip-integracion"><strong>Integración:</strong> <span
+                                    id="res-integracion"></span></span>
+                        </div>
                         <hr>
                         <div id="res-respuesta" class="result-text"></div>
                     </div>
