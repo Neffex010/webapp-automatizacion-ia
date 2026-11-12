@@ -136,6 +136,27 @@
                     </div>
                 </section>
 
+                <!-- Historial de consultas (solo en este navegador) -->
+                <section id="history-card" class="card nb-history mb-4 d-none" aria-labelledby="history-title">
+                    <details id="history-details">
+                        <summary class="nb-history-summary">
+                            <span class="nb-history-heading">
+                                <span id="history-title" class="nb-card-title">Consultas recientes</span>
+                                <span id="history-count" class="nb-history-count">0</span>
+                            </span>
+                        </summary>
+                        <div class="nb-history-body">
+                            <ul id="history-list" class="nb-history-list"></ul>
+                            <div class="nb-history-footer">
+                                <small class="nb-muted">Se guarda solo en este navegador.</small>
+                                <button type="button" id="btn-clear-history" class="nb-btn-history">
+                                    Borrar historial
+                                </button>
+                            </div>
+                        </div>
+                    </details>
+                </section>
+
                 <!-- Estado de carga -->
                 <div id="loading-container" class="text-center my-4 d-none">
                     <div class="nb-spinner" aria-hidden="true"></div>

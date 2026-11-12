@@ -1,4 +1,5 @@
 import { markdownATextoSeguro } from './markdown.js';
+import { leerHistorial } from './history.js';
 
 const MENSAJES_CARGA = [
     'Enviando consulta…',
@@ -7,12 +8,38 @@ const MENSAJES_CARGA = [
 ];
 const INTERVALO_CARGA_MS = 2500;
 
+// Fecha corta para el historial: "hoy 14:32", "ayer 09:10" o "05 nov 18:20"
+function formatearFecha(iso) {
+    const fecha = new Date(iso);
+    if (Number.isNaN(fecha.getTime())) return '';
+
+    const ahora = new Date();
+    const ayer = new Date(ahora);
+    ayer.setDate(ahora.getDate() - 1);
+
+    const hora = fecha.toLocaleTimeString('es-MX', {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false
+    });
+
+    if (fecha.toDateString() === ahora.toDateString()) return `hoy ${hora}`;
+    if (fecha.toDateString() === ayer.toDateString()) return `ayer ${hora}`;
+
+    const dia = fecha.toLocaleDateString('es-MX', { day: '2-digit', month: 'short' });
+    return `${dia} ${hora}`;
+}
+
 export const UI = {
     form: document.getElementById('ai-form'),
     btnSubmit: document.getElementById('btn-submit'),
     btnClear: document.getElementById('btn-clear'),
     btnTheme: document.getElementById('btn-theme'),
     btnNueva: document.getElementById('btn-nueva-consulta'),
+    historyCard: document.getElementById('history-card'),
+    historyList: document.getElementById('history-list'),
+    historyCount: document.getElementById('history-count'),
+    btnClearHistory: document.getElementById('btn-clear-history'),
     loadingContainer: document.getElementById('loading-container'),
     loadingText: document.getElementById('loading-text'),
     errorContainer: document.getElementById('error-container'),
@@ -54,10 +81,12 @@ export const UI = {
             this.resultContainer.classList.add('d-none');
             this.errorContainer.classList.add('d-none');
             this.emptyState.classList.add('d-none');
+            this.historyCard.classList.add('d-none');
             this.iniciarTextosCarga();
             document.title = 'Consultando…';
         } else {
             this.detenerTextosCarga();
+            this.renderHistorial(leerHistorial());
             document.title = this.tituloDocumento;
         }
     },
@@ -157,6 +186,92 @@ export const UI = {
             behavior: this.movimientoSuave() ? 'smooth' : 'auto',
             block: 'start'
         });
+    },
+
+    /* ---------- Historial de consultas ---------- */
+
+    renderHistorial(entradas) {
+        this.historyList.replaceChildren();
+
+        if (!entradas || entradas.length === 0) {
+            this.historyCount.textContent = '0';
+            this.historyCard.classList.add('d-none');
+            return;
+        }
+
+        for (const entrada of entradas) {
+            const item = document.createElement('li');
+
+            const boton = document.createElement('button');
+            boton.type = 'button';
+            boton.className = 'nb-history-item';
+            boton.setAttribute(
+                'aria-label',
+                `Recuperar consulta: ${entrada.pregunta} (${formatearFecha(entrada.fecha)})`
+            );
+
+            const fila = document.createElement('span');
+            fila.className = 'nb-history-top';
+
+            const meta = document.createElement('span');
+            meta.className = 'nb-history-meta';
+            meta.textContent = `${entrada.tema} · ${entrada.nivel}`;
+
+            const fecha = document.createElement('span');
+            fecha.className = 'nb-history-date';
+            fecha.textContent = formatearFecha(entrada.fecha);
+
+            const pregunta = document.createElement('span');
+            pregunta.className = 'nb-history-question';
+            pregunta.textContent = entrada.pregunta;
+
+            fila.append(meta, fecha);
+            boton.append(fila, pregunta);
+            boton.addEventListener('click', () => this.cargarDesdeHistorial(entrada));
+
+            item.append(boton);
+            this.historyList.append(item);
+        }
+
+        this.historyCount.textContent = String(entradas.length);
+        this.historyCard.classList.remove('d-none');
+    },
+
+    // Recupera una consulta guardada sin llamar al webhook
+    cargarDesdeHistorial(entrada) {
+        this.limpiarErroresCampos();
+        this.ocultarError();
+
+        this.campos.tema.value = entrada.tema;
+        this.campos.nivel.value = entrada.nivel;
+        this.campos.integracion.value = entrada.integracion;
+        this.preguntaField.value = entrada.pregunta;
+        this.actualizarContadorCaracteres();
+
+        this.mostrarResultado(entrada);
+    },
+
+    // Borrado en dos pasos: el primer clic pide confirmación durante 3 s
+    confirmarBorradoHistorial(alBorrar) {
+        if (this._borradoPendiente) {
+            clearTimeout(this._borradoPendiente);
+            this._borradoPendiente = null;
+            this.restablecerBotonBorrar();
+            alBorrar();
+            return;
+        }
+
+        this.btnClearHistory.textContent = '¿Borrar todo?';
+        this.btnClearHistory.classList.add('nb-btn-confirm');
+        this._borradoPendiente = setTimeout(() => {
+            this._borradoPendiente = null;
+            this.restablecerBotonBorrar();
+        }, 3000);
+    },
+
+    restablecerBotonBorrar() {
+        this.btnClearHistory.textContent = 'Borrar historial';
+        this.btnClearHistory.classList.remove('nb-btn-confirm');
     },
 
     /* ---------- Utilidades ---------- */

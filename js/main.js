@@ -2,6 +2,7 @@ import { validarFormulario, sanitizarTexto, validarPreguntaSignificativa } from 
 import { consultarAsistente } from './api.js';
 import { UI } from './ui.js';
 import { aplicarTema, temaInicial, alternarTema, sincronizarConPreferenciaSistema } from './theme.js';
+import { guardarConsulta, leerHistorial, borrarHistorial } from './history.js';
 
 function obtenerDatosFormulario() {
     const formData = new FormData(UI.form);
@@ -38,6 +39,7 @@ async function manejarEnvio(evento) {
 
         if (resultado.ok) {
             UI.mostrarResultado(resultado);
+            guardarConsulta(datos, resultado);
         } else {
             UI.mostrarError(resultado.respuesta || 'Ocurrió un error en la automatización.');
         }
@@ -65,6 +67,15 @@ UI.btnClear.addEventListener('click', () => {
 });
 UI.preguntaField.addEventListener('input', () => UI.actualizarContadorCaracteres());
 UI.btnNueva.addEventListener('click', () => UI.prepararNuevaConsulta());
+
+// Historial de consultas guardadas en este navegador
+UI.renderHistorial(leerHistorial());
+UI.btnClearHistory.addEventListener('click', () => {
+    UI.confirmarBorradoHistorial(() => {
+        borrarHistorial();
+        UI.renderHistorial([]);
+    });
+});
 
 // Ctrl+Enter (o Cmd+Enter) envía desde el textarea
 UI.preguntaField.addEventListener('keydown', (evento) => {
