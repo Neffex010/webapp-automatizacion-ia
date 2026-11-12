@@ -14,7 +14,9 @@ Interfaz web **responsiva** (Bootstrap 5 + CSS neobrutalista propio) que captura
 
 | Modo claro | Modo oscuro |
 |------------|-------------|
-| ![Modo claro](captura-modo-claro.png) | ![Modo oscuro](captura-modo-oscuro.png) |
+| ![Modo claro](<img width="1917" height="1031" alt="image" src="https://github.com/user-attachments/assets/af76d205-0ed3-412f-9634-9b21f4d272b5" />
+) | ![Modo oscuro](<img width="1917" height="1027" alt="image" src="https://github.com/user-attachments/assets/746ad7d8-c31c-4f9c-ac6d-a23517a016f4" />
+) |
 
 ---
 
